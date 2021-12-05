@@ -35,12 +35,10 @@ def save_model_weights(model):
     ## TODO: Write to save the weights
     pass
 
-def load_model_weights(model):
-    ## TODO: Write to load the weights
-    pass
+def load_model_weights(model, path):
+    model.load_weights(path)
 
 def main():
-    pass
     ## get data
     annFile_train='{}/annotations/instances_{}.json'.format('..','train2014')
     (train_images, train_captions) = get_data(annFile_train)
