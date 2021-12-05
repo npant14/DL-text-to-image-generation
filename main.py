@@ -2,6 +2,7 @@ import tensorflow as tf
 from models import Generator, Discriminator
 from preprocessing import get_data
 import random
+import numpy as np
 
 def train(gen_model, dis_model, imgs, captions):
     ## TODO: Write the training loop for 1 epoch of the model
@@ -9,7 +10,8 @@ def train(gen_model, dis_model, imgs, captions):
     total_gen_loss = 0
     total_dis_loss = 0
     for img, caption in zip(imgs, captions):
-            fimg = gen_model(img, caption)
+            x_input = tf.random.normal(img.shape)
+            fimg = gen_model(x_input, caption)
             rcap = captions[random.randint(0, len(captions))]
             s_r = dis_model(img, caption)
             s_w = dis_model(img, rcap)
