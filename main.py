@@ -1,5 +1,5 @@
 import tensorflow as tf
-from models import Generator, Descriminator
+from models import Generator, Discriminator
 
 def train(gen_model, des_model):
     ## TODO: Write the training loop for 1 epoch of the model
@@ -29,9 +29,9 @@ def main():
     pass
     ## get data
     generator = Generator()
-    descriminator = Descriminator()
+    discriminator = Discriminator()
     
-    train(generator, descriminator)
+    train(generator, discriminator)
     ## train model
 
     ## test model

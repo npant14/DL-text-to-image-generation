@@ -46,10 +46,10 @@ class Generator(tf.keras.Model):
         return bce(tf.ones_like(fake_output), fake_output)
 
 
-## descriminator
-class Descriminator(tf.keras.Model):
+## discriminator
+class Discriminator(tf.keras.Model):
     def __init__(self):
-        super(Descriminator, self).__init__()
+        super(Discriminator, self).__init__()
         
         self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.01)
 
