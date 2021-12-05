@@ -31,9 +31,9 @@ def test(model):
     ## TODO: Write the testing loop
     pass
 
-def save_model_weights(model):
-    ## TODO: Write to save the weights
-    pass
+def save_model_weights(model, path):
+    model.save_weights(path)
+
 
 def load_model_weights(model, path):
     model.load_weights(path)
