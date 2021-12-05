@@ -3,12 +3,11 @@ from models import Generator, Discriminator
 from preprocessing import get_data
 import random
 
-def train(gen_model, dis_model):
+def train(gen_model, dis_model, imgs, captions):
     ## TODO: Write the training loop for 1 epoch of the model
 
     total_gen_loss = 0
     total_dis_loss = 0
-    imgs, captions = get_data("file.txt")
     for img, caption in zip(imgs, captions):
             fimg = gen_model(img, caption)
             rcap = captions[random.randint(0, len(captions))]
@@ -43,10 +42,14 @@ def load_model_weights(model):
 def main():
     pass
     ## get data
+    annFile_train='{}/annotations/instances_{}.json'.format('..','train2014')
+    (train_images, train_captions) = get_data(annFile_train)
+    annFile_test='{}/annotations/instances_{}.json'.format('..','test2014')
+    (test_images, test_captions) = get_data(annFile_test)
     generator = Generator()
     discriminator = Discriminator()
     
-    train(generator, discriminator)
+    train(generator, discriminator, train_images, train_captions)
     ## train model
 
     ## test model
