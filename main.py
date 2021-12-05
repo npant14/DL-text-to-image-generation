@@ -14,16 +14,19 @@ def train(gen_model, dis_model, imgs, captions):
             s_r = dis_model(img, caption)
             s_w = dis_model(img, rcap)
             s_f = dis_model(fimg, caption)
-            gen_loss = tf.math.log(s_f)
-            dis_loss = tf.math.log(s_r) + (tf.math.log(1 - s_w) + tf.math.log(1 - s_f))/2
+            with tf.gradientTape() as tape:
+                gen_loss = tf.math.log(s_f)
+                dis_loss = tf.math.log(s_r) + (tf.math.log(1 - s_w) + tf.math.log(1 - s_f))/2
+
+                
+            gen_gradients = tape.gradient(gen_loss, gen_model.trainable_variables)
+            gen_model.optimizer.apply_gradients(zip(gen_gradients, gen_model.trainable_variables))
+            dis_gradients = tape.gradient(dis_loss, dis_model.trainable_variables)
+            dis_model.optimizer.apply_gradients(zip(dis_gradients, dis_model.trainable_variables))
+
             total_gen_loss += gen_loss
             total_dis_loss += dis_loss
-            with tf.gradientTape() as tape:
-                gen_gradients = tape.gradient(gen_loss, gen_model.trainable_variables)
-                gen_model.optimizer.apply_gradients(zip(gen_gradients, gen_model.trainable_variables))
-            with tf.gradientTape() as tape:
-                dis_gradients = tape.gradient(dis_loss, dis_model.trainable_variables)
-                dis_model.optimizer.apply_gradients(zip(dis_gradients, dis_model.trainable_variables))
+
     return total_gen_loss, total_dis_loss
 
 
