@@ -9,7 +9,8 @@ import numpy as np
 
 def get_data(annFile):
     """
-    Given annotation file path, return array of images and array of captions corresponding to these images (as strings)
+    Given annotation file path, return array of images and array
+    of captions corresponding to these images (as strings)
     """
     coco = COCO(annFile)
     anns = coco.loadAnns(coco.getAnnIds())
