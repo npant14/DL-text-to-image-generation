@@ -100,7 +100,7 @@ def main():
     (train_images, train_captions) = get_data(annFile_train)
     annFile_test='{}/annotations/instances_{}.json'.format('..','test2014')
     (test_images, test_captions) = get_data(annFile_test)
-    
+
     generator = Generator()
     discriminator = Discriminator()
     
