@@ -1,6 +1,7 @@
 import tensorflow as tf
 from models import Generator, Discriminator
 from preprocessing import get_data
+import random
 
 def train(gen_model, dis_model):
     ## TODO: Write the training loop for 1 epoch of the model
@@ -10,9 +11,12 @@ def train(gen_model, dis_model):
     imgs, captions = get_data("file.txt")
     for img, caption in zip(imgs, captions):
             fimg = gen_model(img, caption)
-            out = dis_model(fimg, caption)
-            gen_loss = gen_model.loss(fimg)
-            dis_loss = dis_model.loss(out)
+            rcap = captions[random.randint(0, len(captions))]
+            s_r = dis_model(img, caption)
+            s_w = dis_model(img, rcap)
+            s_f = dis_model(fimg, caption)
+            gen_loss = tf.math.log(s_f)
+            dis_loss = tf.math.log(s_r) + (tf.math.log(1 - s_w) + tf.math.log(1 - s_f))/2
             total_gen_loss += gen_loss
             total_dis_loss += dis_loss
             with tf.gradientTape() as tape:
