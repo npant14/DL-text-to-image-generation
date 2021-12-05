@@ -42,16 +42,14 @@ def test(gen_model, dis_model, imgs, captions):
             total_dis_loss += dis_loss
     return total_gen_loss, total_dis_loss
 
-def save_model_weights(model):
-    ## TODO: Write to save the weights
-    pass
+def save_model_weights(model, path):
+    model.save_weights(path)
 
-def load_model_weights(model):
-    ## TODO: Write to load the weights
-    pass
+
+def load_model_weights(model, path):
+    model.load_weights(path)
 
 def main():
-    pass
     ## get data
     annFile_train='{}/annotations/instances_{}.json'.format('..','train2014')
     (train_images, train_captions) = get_data(annFile_train)
