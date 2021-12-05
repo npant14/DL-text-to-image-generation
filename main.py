@@ -27,9 +27,20 @@ def train(gen_model, dis_model, imgs, captions):
     return total_gen_loss, total_dis_loss
 
 
-def test(model):
-    ## TODO: Write the testing loop
-    pass
+def test(gen_model, dis_model, imgs, captions):
+    total_gen_loss = 0
+    total_dis_loss = 0
+    for img, caption in zip(imgs, captions):
+            fimg = gen_model(img, caption)
+            rcap = captions[random.randint(0, len(captions))]
+            s_r = dis_model(img, caption)
+            s_w = dis_model(img, rcap)
+            s_f = dis_model(fimg, caption)
+            gen_loss = tf.math.log(s_f)
+            dis_loss = tf.math.log(s_r) + (tf.math.log(1 - s_w) + tf.math.log(1 - s_f))/2
+            total_gen_loss += gen_loss
+            total_dis_loss += dis_loss
+    return total_gen_loss, total_dis_loss
 
 def save_model_weights(model, path):
     model.save_weights(path)
