@@ -93,7 +93,7 @@ class Discriminator(tf.keras.Model):
 
 
 
-    def loss():
+    def loss(out):
         ## TODO: Finish filling out
         cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
         pass
