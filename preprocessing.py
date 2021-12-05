@@ -22,6 +22,7 @@ def get_data(annFile):
     img_ids = map(lambda x: x.image_id, anns)
     captions = map(lambda x: x.caption, anns)
     imgs = coco.loadImgs(img_ids)
+    imgs_np = map(lambda x: np.resize((64, 64), np.asarray(x)), imgs)
 
-    return imgs, captions
+    return imgs_np, captions
 
