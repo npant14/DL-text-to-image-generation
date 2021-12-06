@@ -31,18 +31,18 @@ def get_data():
     img_attribs = attrib_list.read()
     attrib_list.close()
     img_attribs = img_attribs.splitlines()
-    for i in range(0, 100): #11788
+    for i in range(0, 11788): #11788
         print(i)
         img_attributes.append(list(map(lambda x: int(x[x.find(' ', x.find(' ')+1)+1:x.find(' ', x.find(' ')+1)+2]), img_attribs[i:i+312])))
     print(tf.convert_to_tensor(img_attributes))
     
-    images = np.zeros((100, 64, 64, 3)) ### 11788
+    images = np.zeros((11788, 64, 64, 3)) ### 11788
     image_list = open(folder + "/images.txt")
     image_ids = image_list.read()
     image_list.close()
     image_ids = image_ids.splitlines()
     
-    for i in range(0, 100): #### 11788
+    for i in range(0, 11788): #### 11788
         print(i)
         img_data = Image.open(folder + "/images/" + image_ids[i][image_ids[i].find(' ')+1:], 'r')
         #print(np.array(img_data).shape)

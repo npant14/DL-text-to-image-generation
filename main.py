@@ -22,7 +22,7 @@ def train(gen_model, dis_model, imgs, captions):
         iter += 1
         print("number " + str(iter) + " with losses: " + str(total_dis_loss) + " (dis loss), " + str(total_gen_loss) + " (gen loss)")
         z = tf.random.normal([batch_size, 128])
-        caps = captions[i: i+batch_size]
+        caps = captions[i: min(i+batch_size, imgs.shape[0])]
         
         with tf.GradientTape() as tape:
             print('caption batch shape', caps.shape)
