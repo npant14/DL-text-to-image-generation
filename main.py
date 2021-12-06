@@ -107,7 +107,7 @@ def main():
     train(generator, discriminator, train_images, train_captions)
     ## train model
     save_model_weights(generator, 'generator_weights.h5')
-    save_model_weights(generator, 'discriminator_weights.h5')
+    save_model_weights(discriminator, 'discriminator_weights.h5')
     visualize_generation_results(generator, test_captions[0:10])
 
     ## test model
