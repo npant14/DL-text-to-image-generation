@@ -100,7 +100,7 @@ def visualize_generation_results(model, captions):
 
     for idx, cap in enumerate(captions):
         z = tf.random.normal([1, 128])
-        generated_img = model(z, np.expand_dims(cap, axis=0)).numpy()
+        generated_img = model(z, tf.expand_dims(cap, axis=0)).numpy()
 
         ax = plt.subplot(gspec[idx])
         
