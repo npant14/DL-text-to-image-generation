@@ -14,16 +14,17 @@ def train(gen_model, dis_model, imgs, captions):
 
     ## not batched?
     for img, caption in zip(imgs, captions):
-            z = tf.random.normal([1, 128])
-            fimg = gen_model(z, caption)
-            rcap = captions[random.randint(0, len(captions) - 1)]
-            s_r = dis_model(tf.expand_dims(img, axis=0), caption)
-            s_w = dis_model(tf.expand_dims(img, axis=0), rcap)
-            s_f = dis_model(fimg, caption)
             with tf.GradientTape() as tape:
+                z = tf.random.normal([1, 128])
+                fimg = gen_model(z, caption)
+                rcap = captions[random.randint(0, len(captions) - 1)]
+                s_r = dis_model(tf.expand_dims(img, axis=0), caption)
+                s_w = dis_model(tf.expand_dims(img, axis=0), rcap)
+                s_f = dis_model(fimg, caption)
+                
                 gen_loss = gen_model.loss(s_f)
                 dis_loss = dis_model.loss(s_r, s_w, s_f)
-                
+
                 gen_gradients = tape.gradient(gen_loss, gen_model.trainable_variables)
                 gen_model.optimizer.apply_gradients(zip(gen_gradients, gen_model.trainable_variables))
                 dis_gradients = tape.gradient(dis_loss, dis_model.trainable_variables)
