@@ -97,7 +97,6 @@ class Discriminator(tf.keras.Model):
         print('embed dimensions', embedded_text.shape)
         x = tf.concat([four_by_four, embedded_text], axis=-1)
         x = self.fc(x)
-        x = tf.reshape(x, shape=[])
         return x
 
 
