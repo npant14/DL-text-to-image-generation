@@ -49,7 +49,7 @@ def get_data():
         images[i] = resize(np.asarray(img_data), (64, 64, 3))
         
     print(0)
-    return images, np.expand_dims(np.array(img_attributes), axis=1)
+    return images, np.array(img_attributes)
 
 
 

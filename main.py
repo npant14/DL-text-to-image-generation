@@ -6,6 +6,7 @@ import random
 import os
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import numpy as np
 
 def train(gen_model, dis_model, imgs, captions):
     ## TODO: Write the training loop for 1 epoch of the model
@@ -25,7 +26,7 @@ def train(gen_model, dis_model, imgs, captions):
         
         with tf.GradientTape() as tape:
             fimg = gen_model(z, caps)
-            rcap = random.sample(captions, batch_size)
+            rcap = np.random.choice(captions, size=batch_size)
             s_r = dis_model(imgs, caps)
             s_w = dis_model(imgs, rcap)
             s_f = dis_model(fimg, caps)
@@ -35,7 +36,7 @@ def train(gen_model, dis_model, imgs, captions):
             total_gen_loss += gen_loss
         with tf.GradientTape() as tape:
             fimg = gen_model(z, caps)
-            rcap = random.sample(captions, batch_size)
+            rcap = np.random.choice(captions, size=batch_size)
             s_r = dis_model(imgs, caps)
             s_w = dis_model(imgs, rcap)
             s_f = dis_model(fimg, caps)
