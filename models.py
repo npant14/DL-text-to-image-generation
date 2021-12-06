@@ -91,6 +91,7 @@ class Discriminator(tf.keras.Model):
         embedded_text = self.text_embedding(text)
         [fdim, sdim] = embedded_text.shape
         embedded_text = tf.reshape(embedded_text, [-1, 1, fdim, sdim])
+        print('pretile', embedded_text.shape)
         embedded_text = tf.tile(embedded_text, [1, 4, 4, 1])
         print('embed dimensions', embedded_text.shape)
         x = tf.concat([four_by_four, embedded_text], axis=-1)
