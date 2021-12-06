@@ -96,10 +96,10 @@ def visualize_generation_results(model, captions):
 
 def main():
     ## get data
-    annFile_train='{}/annotations/instances_{}.json'.format('..','train2014')
-    (train_images, train_captions) = get_data(annFile_train)
-    annFile_test='{}/annotations/instances_{}.json'.format('..','test2014')
-    (test_images, test_captions) = get_data(annFile_test)
+    #annFile_train='{}/annotations/instances_{}.json'.format('..','train2014')
+    (train_images, train_captions) = get_data()
+    #annFile_test='{}/annotations/instances_{}.json'.format('..','test2014')
+    #(test_images, test_captions) = get_data()
 
     generator = Generator()
     discriminator = Discriminator()
