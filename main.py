@@ -29,8 +29,8 @@ def train(gen_model, dis_model, imgs, captions):
             fimg = gen_model(z, caps)
             rcap = captions[np.random.randint(captions.shape[0], size=(batch_size)),:]
             #rcap = np.random.choice(captions, size=batch_size)
-            s_r = dis_model(imgs, caps)
-            s_w = dis_model(imgs, rcap)
+            s_r = dis_model(imgs[i: min(i+batch_size, imgs.shape[0])], caps)
+            s_w = dis_model(imgs[i: min(i+batch_size, imgs.shape[0])], rcap)
             s_f = dis_model(fimg, caps)
             gen_loss = gen_model.loss(s_f)
             gen_gradients = tape.gradient(tf.reduce_mean(gen_loss), gen_model.trainable_variables)
@@ -39,8 +39,8 @@ def train(gen_model, dis_model, imgs, captions):
         with tf.GradientTape() as tape:
             fimg = gen_model(z, caps)
             rcap = captions[np.random.randint(captions.shape[0], size=(batch_size)),:]
-            s_r = dis_model(imgs, caps)
-            s_w = dis_model(imgs, rcap)
+            s_r = dis_model(imgs[i: min(i+batch_size, imgs.shape[0])], caps)
+            s_w = dis_model(imgs[i: min(i+batch_size, imgs.shape[0])], rcap)
             s_f = dis_model(fimg, caps)
             dis_loss = dis_model.loss(s_r, s_w, s_f)
             dis_gradients = tape.gradient(tf.reduce_mean(dis_loss), dis_model.trainable_variables)
