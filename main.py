@@ -1,4 +1,5 @@
 import tensorflow as tf
+from tensorflow.python.ops.gen_batch_ops import batch
 from models import Generator, Discriminator
 from preprocessing import get_data
 import random
@@ -14,29 +15,32 @@ def train(gen_model, dis_model, imgs, captions):
 
     ## not batched?
     iter = 0
-    for img, caption in zip(imgs, captions):
+    batch_size = 100
+    #for img, caption in zip(imgs, captions):
+    for i in range(0, imgs.shape[0], batch_size):
         iter += 1
         print("number " + str(iter) + " with losses: " + str(total_dis_loss) + " (dis loss), " + str(total_gen_loss) + " (gen loss)")
-        z = tf.random.normal([1, 128])
+        z = tf.random.normal([batch_size, 128])
+        caps = captions[i: i+batch_size]
         fimg = 0
         rcap = 0
         s_r, s_w, s_f = 0, 0, 0
         with tf.GradientTape() as tape:
-            fimg = gen_model(z, caption)
+            fimg = gen_model(z, caps)
             rcap = captions[random.randint(0, len(captions) - 1)]
-            s_r = dis_model(tf.expand_dims(img, axis=0), caption)
-            s_w = dis_model(tf.expand_dims(img, axis=0), rcap)
-            s_f = dis_model(fimg, caption)
+            s_r = dis_model(imgs, caps)
+            s_w = dis_model(imgs, rcap)
+            s_f = dis_model(fimg, caps)
             gen_loss = gen_model.loss(s_f)
             gen_gradients = tape.gradient(gen_loss, gen_model.trainable_variables)
             gen_model.optimizer.apply_gradients(zip(gen_gradients, gen_model.trainable_variables))
             total_gen_loss += gen_loss
         with tf.GradientTape() as tape:
-            fimg = gen_model(z, caption)
+            fimg = gen_model(z, caps)
             rcap = captions[random.randint(0, len(captions) - 1)]
-            s_r = dis_model(tf.expand_dims(img, axis=0), caption)
-            s_w = dis_model(tf.expand_dims(img, axis=0), rcap)
-            s_f = dis_model(fimg, caption)
+            s_r = dis_model(imgs, caps)
+            s_w = dis_model(imgs, rcap)
+            s_f = dis_model(fimg, caps)
             dis_loss = dis_model.loss(s_r, s_w, s_f)
             dis_gradients = tape.gradient(dis_loss, dis_model.trainable_variables)
             dis_model.optimizer.apply_gradients(zip(dis_gradients, dis_model.trainable_variables))

@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import Sequential
-from tensorflow.keras.layers import Dense, Conv2D, Conv2DTranspose, Reshape, LeakyReLU, BatchNormalization
+from tensorflow.keras.layers import Dense, Conv2D, Conv2DTranspose, Reshape, LeakyReLU, BatchNormalization, Flatten
 from tensorflow.math import log
 
 ## generator
@@ -45,9 +45,8 @@ class Generator(tf.keras.Model):
         #return tf.math.log(s_f)
         binary_cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
         #return tf.reduce_mean(binary_cross_entropy(tf.ones_like(s_f), s_f))
-        print(s_f.shape)
-        print(tf.ones_like(s_f))
-        return binary_cross_entropy(tf.expand_dims(tf.ones_like(s_f), axis=0), tf.expand_dims(s_f, axis=0))
+        
+        return binary_cross_entropy(tf.ones_like(s_f), s_f)
 
 
 ## discriminator
@@ -75,7 +74,8 @@ class Discriminator(tf.keras.Model):
             Conv2D(128, [1,1], activation='relu'),
             ## another rectification here
             BatchNormalization(), 
-            Conv2D(1, [4,4], activation='sigmoid')
+            Flatten(),
+            Dense(1, activation='sigmoid')
         ])
 
     def call(self, img, text):
