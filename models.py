@@ -45,6 +45,8 @@ class Generator(tf.keras.Model):
         #return tf.math.log(s_f)
         binary_cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
         #return tf.reduce_mean(binary_cross_entropy(tf.ones_like(s_f), s_f))
+        print(s_f.shape)
+        print(tf.ones_like(s_f))
         return binary_cross_entropy(tf.ones_like(s_f), s_f)
 
 
