@@ -26,7 +26,8 @@ def train(gen_model, dis_model, imgs, captions):
         
         with tf.GradientTape() as tape:
             fimg = gen_model(z, caps)
-            rcap = np.random.choice(captions, size=batch_size)
+            rcap = captions[np.random.randint(captions.shape[0], size=(batch_size)),:]
+            #rcap = np.random.choice(captions, size=batch_size)
             s_r = dis_model(imgs, caps)
             s_w = dis_model(imgs, rcap)
             s_f = dis_model(fimg, caps)
@@ -36,7 +37,7 @@ def train(gen_model, dis_model, imgs, captions):
             total_gen_loss += gen_loss
         with tf.GradientTape() as tape:
             fimg = gen_model(z, caps)
-            rcap = np.random.choice(captions, size=batch_size)
+            rcap = captions[np.random.randint(captions.shape[0], size=(batch_size)),:]
             s_r = dis_model(imgs, caps)
             s_w = dis_model(imgs, rcap)
             s_f = dis_model(fimg, caps)
