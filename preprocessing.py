@@ -40,6 +40,7 @@ def get_data():
     image_list.close()
     image_ids = image_ids.splitlines()
     for i in range(0, 11788):
+        print(i)
         img_data = Image.open(folder + "/images/" + image_ids[i][image_ids[i].find(' ')+1:], 'r').getdata()
         images.append(np.array(img_data))
     print(0)
