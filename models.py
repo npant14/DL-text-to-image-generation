@@ -40,10 +40,9 @@ class Generator(tf.keras.Model):
         fimg = self.deconv(x)
         return fimg
 
-    def loss(fake_output):
+    def loss(self, s_f):
         ## TODO: Verify that this matches what the paper is looking for 
-        bce = tf.keras.losses.BinaryCrossentropy(from_logits=True)
-        return bce(tf.ones_like(fake_output), fake_output)
+        return tf.math.log(s_f)
 
 
 ## discriminator
@@ -93,7 +92,6 @@ class Discriminator(tf.keras.Model):
 
 
 
-    def loss(out):
+    def loss(self, s_r, s_w, s_f):
         ## TODO: Finish filling out
-        cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
-        pass
+        return tf.math.log(s_r) + (tf.math.log(1 - s_w) + tf.math.log(1 - s_f))/2
