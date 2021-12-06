@@ -43,8 +43,9 @@ def get_data():
     for i in range(0, 11788):
         print(i)
         img_data = Image.open(folder + "/images/" + image_ids[i][image_ids[i].find(' ')+1:], 'r').getdata()
-        images.append(np.array(img_data))
         print(np.array(img_data).shape)
+        images.append(np.array(img_data))
+        
     print(0)
     return 0
 
