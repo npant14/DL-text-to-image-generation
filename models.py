@@ -47,7 +47,7 @@ class Generator(tf.keras.Model):
         #return tf.reduce_mean(binary_cross_entropy(tf.ones_like(s_f), s_f))
         print(s_f.shape)
         print(tf.ones_like(s_f))
-        return binary_cross_entropy(tf.ones_like(s_f), s_f)
+        return binary_cross_entropy(tf.expand_dims(tf.ones_like(s_f)), tf.expand_dims(s_f))
 
 
 ## discriminator
