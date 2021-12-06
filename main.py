@@ -111,7 +111,7 @@ def visualize_generation_results(model, captions):
         ax.set_yticklabels([])
         ax.set_aspect("equal")
         ax.set_title(cap)
-
+        print("Max val", tf.max(generated_img))
         plt.imshow(tf.reshape(generated_img, (64, 64, 3)))
 
     plt.show()
