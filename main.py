@@ -33,9 +33,9 @@ def train(gen_model, dis_model, imgs, captions):
             s_w = dis_model(imgs, rcap)
             s_f = dis_model(fimg, caps)
             gen_loss = gen_model.loss(s_f)
-            gen_gradients = tape.gradient(gen_loss, gen_model.trainable_variables)
+            gen_gradients = tape.gradient(tf.reduce_mean(gen_loss), gen_model.trainable_variables)
             gen_model.optimizer.apply_gradients(zip(gen_gradients, gen_model.trainable_variables))
-            total_gen_loss += gen_loss
+            total_gen_loss += tf.reduce_sum(gen_loss)
         with tf.GradientTape() as tape:
             fimg = gen_model(z, caps)
             rcap = captions[np.random.randint(captions.shape[0], size=(batch_size)),:]
@@ -43,9 +43,9 @@ def train(gen_model, dis_model, imgs, captions):
             s_w = dis_model(imgs, rcap)
             s_f = dis_model(fimg, caps)
             dis_loss = dis_model.loss(s_r, s_w, s_f)
-            dis_gradients = tape.gradient(dis_loss, dis_model.trainable_variables)
+            dis_gradients = tape.gradient(tf.reduce_mean(dis_loss), dis_model.trainable_variables)
             dis_model.optimizer.apply_gradients(zip(dis_gradients, dis_model.trainable_variables))
-            total_dis_loss += dis_loss
+            total_dis_loss += tf.reduce_sum(dis_loss)
 
     return total_gen_loss, total_dis_loss
 
