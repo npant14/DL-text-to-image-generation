@@ -20,7 +20,7 @@ def train(gen_model, dis_model, imgs, captions):
             s_r = dis_model(tf.expand_dims(img, axis=0), caption)
             s_w = dis_model(tf.expand_dims(img, axis=0), rcap)
             s_f = dis_model(fimg, caption)
-            with tf.gradientTape() as tape:
+            with tf.GradientTape() as tape:
                 gen_loss = gen_model.loss(s_f)
                 dis_loss = dis_model.loss(s_r, s_w, s_f)
 
