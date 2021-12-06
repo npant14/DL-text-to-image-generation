@@ -45,7 +45,7 @@ def get_data():
         print(i)
         img_data = Image.open(folder + "/images/" + image_ids[i][image_ids[i].find(' ')+1:], 'r').getdata()
         #print(np.array(img_data).shape)
-        images[i] = resize(np.array(img_data), (64, 64, 3))
+        images[i] = resize(np.array(img_data), (4096, 3))
         
     print(0)
     return 0
