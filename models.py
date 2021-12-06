@@ -35,7 +35,7 @@ class Generator(tf.keras.Model):
 
         returns: fake generated image
         """
-        embedded_text = tf.squeeze(self.text_embedding(text))
+        embedded_text = self.text_embedding(text)
         x = tf.concat([latent_rep, embedded_text], axis=-1)
         fimg = self.deconv(x)
         return fimg
