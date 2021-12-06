@@ -13,25 +13,34 @@ def train(gen_model, dis_model, imgs, captions):
     total_dis_loss = 0
 
     ## not batched?
+    iter = 0
     for img, caption in zip(imgs, captions):
-            with tf.GradientTape() as tape:
-                z = tf.random.normal([1, 128])
-                fimg = gen_model(z, caption)
-                rcap = captions[random.randint(0, len(captions) - 1)]
-                s_r = dis_model(tf.expand_dims(img, axis=0), caption)
-                s_w = dis_model(tf.expand_dims(img, axis=0), rcap)
-                s_f = dis_model(fimg, caption)
-                
-                gen_loss = gen_model.loss(s_f)
-                dis_loss = dis_model.loss(s_r, s_w, s_f)
-
-                gen_gradients = tape.gradient(gen_loss, gen_model.trainable_variables)
-                gen_model.optimizer.apply_gradients(zip(gen_gradients, gen_model.trainable_variables))
-                dis_gradients = tape.gradient(dis_loss, dis_model.trainable_variables)
-                dis_model.optimizer.apply_gradients(zip(dis_gradients, dis_model.trainable_variables))
-
-                total_gen_loss += gen_loss
-                total_dis_loss += dis_loss
+        iter += 1
+        print("number " + str(iter) + " with losses: " + str(total_dis_loss) + " (dis loss), " + str(total_gen_loss) + " (gen loss)")
+        z = tf.random.normal([1, 128])
+        fimg = 0
+        rcap = 0
+        s_r, s_w, s_f = 0, 0, 0
+        with tf.GradientTape() as tape:
+            fimg = gen_model(z, caption)
+            rcap = captions[random.randint(0, len(captions) - 1)]
+            s_r = dis_model(tf.expand_dims(img, axis=0), caption)
+            s_w = dis_model(tf.expand_dims(img, axis=0), rcap)
+            s_f = dis_model(fimg, caption)
+            gen_loss = gen_model.loss(s_f)
+            gen_gradients = tape.gradient(gen_loss, gen_model.trainable_variables)
+            gen_model.optimizer.apply_gradients(zip(gen_gradients, gen_model.trainable_variables))
+            total_gen_loss += gen_loss
+        with tf.GradientTape() as tape:
+            fimg = gen_model(z, caption)
+            rcap = captions[random.randint(0, len(captions) - 1)]
+            s_r = dis_model(tf.expand_dims(img, axis=0), caption)
+            s_w = dis_model(tf.expand_dims(img, axis=0), rcap)
+            s_f = dis_model(fimg, caption)
+            dis_loss = dis_model.loss(s_r, s_w, s_f)
+            dis_gradients = tape.gradient(dis_loss, dis_model.trainable_variables)
+            dis_model.optimizer.apply_gradients(zip(dis_gradients, dis_model.trainable_variables))
+            total_dis_loss += dis_loss
 
     return total_gen_loss, total_dis_loss
 
@@ -97,7 +106,7 @@ def visualize_generation_results(model, captions):
         ax.set_aspect("equal")
         ax.set_title(cap)
 
-        plt.imshow(generated_img)
+        plt.imshow(tf.reshape(generated_img, (64, 64, 3)))
 
     plt.show()
 
@@ -124,7 +133,7 @@ def main():
     ## train model
     save_model_weights(generator, 'generator_weights.h5')
     save_model_weights(discriminator, 'discriminator_weights.h5')
-    visualize_generation_results(generator, test_captions[0:10])
+    visualize_generation_results(generator, train_captions[0:100])
 
     ## test model
 

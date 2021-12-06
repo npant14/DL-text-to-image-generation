@@ -70,7 +70,7 @@ class Discriminator(tf.keras.Model):
             Conv2D(128, [1,1], activation='relu'),
             ## another rectification here
             BatchNormalization(), 
-            Conv2D(1, [4,4])
+            Conv2D(1, [4,4], activation='sigmoid')
         ])
 
     def call(self, img, text):
@@ -81,13 +81,13 @@ class Discriminator(tf.keras.Model):
         returns: probability that the image is from the training set
         """
         four_by_four =  self.conv(img)
-
         embedded_text = self.text_embedding(text)
         [fdim, sdim] = embedded_text.shape
         embedded_text = tf.reshape(embedded_text, [-1, 1, fdim, sdim])
         embedded_text = tf.tile(embedded_text, [1,4,4,1])
         x = tf.concat([four_by_four, embedded_text], axis=-1)
         x = self.fc(x)
+        x = tf.reshape(x, shape=[])
         return x
 
 
