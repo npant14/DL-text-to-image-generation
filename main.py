@@ -25,6 +25,7 @@ def train(gen_model, dis_model, imgs, captions):
         caps = captions[i: i+batch_size]
         
         with tf.GradientTape() as tape:
+            print('caption batch shape', caps.shape)
             fimg = gen_model(z, caps)
             rcap = captions[np.random.randint(captions.shape[0], size=(batch_size)),:]
             #rcap = np.random.choice(captions, size=batch_size)
@@ -100,7 +101,8 @@ def visualize_generation_results(model, captions):
 
     for idx, cap in enumerate(captions):
         z = tf.random.normal([1, 128])
-        generated_img = model(z, tf.expand_dims(tf.expand_dims(cap, axis=0), axis=0)).numpy()
+        print('vis caption shape', np.expand_dims(cap, axis=0).shape)
+        generated_img = model(z, tf.expand_dims(cap, axis=0)).numpy()
 
         ax = plt.subplot(gspec[idx])
         
