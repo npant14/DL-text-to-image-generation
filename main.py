@@ -16,7 +16,7 @@ def train(gen_model, dis_model, imgs, captions):
     for img, caption in zip(imgs, captions):
             z = tf.random.normal([1, 128])
             fimg = gen_model(z, caption)
-            rcap = captions[random.randint(0, len(captions))]
+            rcap = captions[random.randint(0, len(captions) - 1)]
             s_r = dis_model(tf.expand_dims(img, axis=0), caption)
             s_w = dis_model(tf.expand_dims(img, axis=0), rcap)
             s_f = dis_model(fimg, caption)
