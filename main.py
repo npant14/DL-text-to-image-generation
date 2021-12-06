@@ -45,8 +45,22 @@ def test(gen_model, dis_model, imgs, captions):
             s_r = dis_model(img, caption)
             s_w = dis_model(img, rcap)
             s_f = dis_model(fimg, caption)
-            gen_loss = tf.math.log(s_f)
-            dis_loss = tf.math.log(s_r) + (tf.math.log(1 - s_w) + tf.math.log(1 - s_f))/2
+            #gen_loss = tf.math.log(s_f)
+            binary_cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+            gen_loss = tf.reduce_mean(binary_cross_entropy(tf.ones_like(s_f), s_f))
+            #dis_loss = tf.math.log(s_r) + (tf.math.log(1 - s_w) + tf.math.log(1 - s_f))/2
+
+            alpha = 0.5
+            real_output_noise = tf.ones_like(s_r)
+            fake_output_real_text_noise_1 = tf.zeros_like(s_f)
+            real_output_fake_text_noise = tf.zeros_like(s_w)
+
+            real_loss = tf.reduce_mean(binary_cross_entropy(real_output_noise, s_r))
+            fake_loss_ms_1 = tf.reduce_mean(binary_cross_entropy(fake_output_real_text_noise_1, s_f))
+            fake_loss_2 = tf.reduce_mean(binary_cross_entropy(real_output_fake_text_noise, s_w))
+
+            dis_loss = real_loss + alpha * fake_loss_2 + (1-alpha) * fake_loss_ms_1 
+            
             total_gen_loss += gen_loss
             total_dis_loss += dis_loss
     return total_gen_loss, total_dis_loss
