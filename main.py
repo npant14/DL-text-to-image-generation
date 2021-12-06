@@ -98,6 +98,8 @@ def main():
     ## get data
     #annFile_train='{}/annotations/instances_{}.json'.format('..','train2014')
     (train_images, train_captions) = get_data()
+    print(train_images.shape)
+    print(train_captions.shape)
     #annFile_test='{}/annotations/instances_{}.json'.format('..','test2014')
     #(test_images, test_captions) = get_data()
 

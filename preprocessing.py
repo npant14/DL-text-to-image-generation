@@ -48,11 +48,11 @@ def get_data():
         images[i] = resize(np.asarray(img_data), (64, 64, 3))
         
     print(0)
-    return 0
+    return images, np.array(img_attributes)
 
 
 
-def main():
-    get_data()
+#def main():
+    #get_data()
     
-main()
+#main()
