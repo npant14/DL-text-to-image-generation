@@ -1,6 +1,7 @@
 import numpy as np
 import tensorflow as tf
 from PIL import Image
+from skimage.transform import resize
 ## for the preprocessing code
 
 ## Image preprocessing
@@ -34,7 +35,7 @@ def get_data():
         img_attributes.append(list(map(lambda x: int(x[x.find(' ', x.find(' ')+1)+1:x.find(' ', x.find(' ')+1)+2]), img_attribs[i:i+312])))
     print(tf.convert_to_tensor(img_attributes))
     
-    images = np.zeros((11788, 167500, 3))
+    images = np.zeros((11788, 4096, 3))
     image_list = open(folder + "/images.txt")
     image_ids = image_list.read()
     image_list.close()
@@ -44,7 +45,7 @@ def get_data():
         print(i)
         img_data = Image.open(folder + "/images/" + image_ids[i][image_ids[i].find(' ')+1:], 'r').getdata()
         #print(np.array(img_data).shape)
-        images[i] = np.array(img_data)
+        images[i] = resize(np.array(img_data), (64, 64, 3))
         
     print(0)
     return 0
