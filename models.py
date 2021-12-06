@@ -42,7 +42,9 @@ class Generator(tf.keras.Model):
 
     def loss(self, s_f):
         ## TODO: Verify that this matches what the paper is looking for 
-        return tf.math.log(s_f)
+        #return tf.math.log(s_f)
+        binary_cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+        return tf.reduce_mean(binary_cross_entropy(tf.ones_like(s_f), s_f))
 
 
 ## discriminator
@@ -94,4 +96,16 @@ class Discriminator(tf.keras.Model):
 
     def loss(self, s_r, s_w, s_f):
         ## TODO: Finish filling out
-        return tf.math.log(s_r) + (tf.math.log(1 - s_w) + tf.math.log(1 - s_f))/2
+        #return tf.math.log(s_r) + (tf.math.log(1 - s_w) + tf.math.log(1 - s_f))/2
+        alpha = 0.5
+        binary_cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+        real_output_noise = tf.ones_like(s_r)
+        fake_output_real_text_noise_1 = tf.zeros_like(s_f)
+        real_output_fake_text_noise = tf.zeros_like(s_w)
+
+        real_loss = tf.reduce_mean(binary_cross_entropy(real_output_noise, s_r))
+        fake_loss_ms_1 = tf.reduce_mean(binary_cross_entropy(fake_output_real_text_noise_1, s_f))
+        fake_loss_2 = tf.reduce_mean(binary_cross_entropy(real_output_fake_text_noise, s_w))
+
+        total_loss = real_loss + alpha * fake_loss_2 + (1-alpha) * fake_loss_ms_1 
+        return total_loss
