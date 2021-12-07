@@ -135,7 +135,7 @@ def main():
     generator = Generator()
     discriminator = Discriminator()
     
-    for i in range(200):
+    for i in range(500):
         print("starting epoch ", i)
         train(generator, discriminator, train_images, train_captions)
     ## train model
