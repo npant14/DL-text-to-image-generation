@@ -18,7 +18,7 @@ def train(gen_model, dis_model, imgs, captions):
     iter = 0
     batch_size = 100
     #for img, caption in zip(imgs, captions):
-    for i in range(0, imgs.shape[0], batch_size):
+    for i in range(0, batch_size * (imgs.shape[0] // batch_size), batch_size):
         iter += 1
         print("number " + str(iter) + " with losses: " + str(total_dis_loss) + " (dis loss), " + str(total_gen_loss) + " (gen loss)")
         z = tf.random.normal([batch_size, 128])
