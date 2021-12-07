@@ -35,10 +35,7 @@ class Generator(tf.keras.Model):
 
         returns: fake generated image
         """
-        print('text shape', text.shape())
-        embedded_text = tf.squeeze(self.text_embedding(text))
-        print('embed shape', embedded_text.shape())
-        print('latent shape', latent_rep.shape())
+        embedded_text = self.text_embedding(text)
         x = tf.concat([latent_rep, embedded_text], axis=-1)
         fimg = self.deconv(x)
         return fimg
@@ -91,11 +88,12 @@ class Discriminator(tf.keras.Model):
         four_by_four =  self.conv(img)
         embedded_text = self.text_embedding(text)
         [fdim, sdim] = embedded_text.shape
-        embedded_text = tf.reshape(embedded_text, [-1, 1, fdim, sdim])
+        embedded_text = tf.reshape(embedded_text, [fdim, 1, 1, sdim])
         embedded_text = tf.tile(embedded_text, [1,4,4,1])
+        print(embedded_text.shape)
+        print(four_by_four.shape)
         x = tf.concat([four_by_four, embedded_text], axis=-1)
         x = self.fc(x)
-        x = tf.reshape(x, shape=[])
         return x
 
 
