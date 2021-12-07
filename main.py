@@ -139,8 +139,8 @@ def main():
         print("starting epoch ", i)
         train(generator, discriminator, train_images, train_captions)
     ## train model
-    save_model_weights(generator, 'generator_weights.h5')
-    save_model_weights(discriminator, 'discriminator_weights.h5')
+    save_model_weights(generator, 'generator_weights_smooth.h5')
+    save_model_weights(discriminator, 'discriminator_weights_smooth.h5')
     visualize_generation_results(generator, train_captions[0:100])
 
     ## test model
