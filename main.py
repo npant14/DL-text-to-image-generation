@@ -110,7 +110,7 @@ def visualize_generation_results(model, captions):
         ax.set_xticklabels([])
         ax.set_yticklabels([])
         ax.set_aspect("equal")
-        ax.set_title(cap)
+        # ax.set_title(cap)
         print("Max val", tf.math.reduce_max(generated_img))
         plt.imshow(tf.reshape(generated_img, (64, 64, 3)))
 
@@ -135,7 +135,9 @@ def main():
     generator = Generator()
     discriminator = Discriminator()
     
-    train(generator, discriminator, train_images, train_captions)
+    for i in range(10):
+        print("starting epoch ", i)
+        train(generator, discriminator, train_images, train_captions)
     ## train model
     save_model_weights(generator, 'generator_weights.h5')
     save_model_weights(discriminator, 'discriminator_weights.h5')
