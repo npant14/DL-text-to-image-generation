@@ -9,7 +9,7 @@ class Generator(tf.keras.Model):
     def __init__(self):
         super(Generator, self).__init__()
         
-        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.0002, beta_1=0.5)
+        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.001, beta_1=0.5)
         
         self.text_embedding = Sequential([
             Dense(128, activation=None), 
@@ -54,7 +54,7 @@ class Discriminator(tf.keras.Model):
     def __init__(self):
         super(Discriminator, self).__init__()
         
-        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.0002, beta_1=0.5)
+        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.001, beta_1=0.5)
 
         self.text_embedding = Sequential([
             Dense(128, activation=None), 

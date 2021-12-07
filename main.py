@@ -118,7 +118,7 @@ def visualize_generation_results(model, captions):
 
     ## save to pdf (in case plt interactive window doesn't work)
     os.makedirs("outputs", exist_ok=True)
-    output_path = os.path.join("outputs", "visualize_results_smooth_500.pdf")
+    output_path = os.path.join("outputs", "visualize_results_smooth_200_lr.pdf")
     plt.savefig(output_path, bbox_inches="tight")
     plt.close(fig)
 
@@ -135,12 +135,12 @@ def main():
     generator = Generator()
     discriminator = Discriminator()
     
-    for i in range(500):
+    for i in range(200):
         print("starting epoch ", i)
         train(generator, discriminator, train_images, train_captions)
     ## train model
-    save_model_weights(generator, 'generator_weights_smooth_500.h5')
-    save_model_weights(discriminator, 'discriminator_weights_smooth_500.h5')
+    save_model_weights(generator, 'generator_weights_smooth_200_lr.h5')
+    save_model_weights(discriminator, 'discriminator_weights_smooth_200_lr.h5')
     visualize_generation_results(generator, train_captions[0:100])
 
     ## test model
