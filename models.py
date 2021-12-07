@@ -94,16 +94,33 @@ class Discriminator(tf.keras.Model):
         x = self.fc(x)
         return x
 
+    def smooth_positive_labels(self, y):
+	    return y - 0.3 + (np.random.random(y.shape) * 0.5)
+ 
+    def smooth_negative_labels(self, y):
+	    return y + np.random.random(y.shape) * 0.3
+    def noisy_labels(self, y, p_flip):
+        n_select = int(p_flip * int(y.shape[0]))
+        flip_ix = np.random.choice([i for i in range(int(y.shape[0]))], size=n_select)
 
+        op_list = []
+        for i in range(int(y.shape[0])):
+            if i in flip_ix:
+                op_list.append(tf.subtract(1.0, y[i]))
+            else:
+                op_list.append(y[i])
+
+        outputs = tf.stack(op_list)
+        return outputs
 
     def loss(self, s_r, s_w, s_f):
         ## TODO: Finish filling out
         #return tf.math.log(s_r) + (tf.math.log(1 - s_w) + tf.math.log(1 - s_f))/2
         alpha = 0.5
         binary_cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
-        real_output_noise = tf.ones_like(s_r)
-        fake_output_real_text_noise_1 = tf.zeros_like(s_f)
-        real_output_fake_text_noise = tf.zeros_like(s_w)
+        real_output_noise =  self.smooth_positive_labels(self.noisy_labels(tf.ones_like(s_r), 0.10))
+        fake_output_real_text_noise_1 = self.smooth_negative_labels(tf.zeros_like(s_f))
+        real_output_fake_text_noise = self.smooth_negative_labels(tf.zeros_like(s_w))
 
         #real_loss = tf.reduce_mean(binary_cross_entropy(real_output_noise, s_r))
         #fake_loss_ms_1 = tf.reduce_mean(binary_cross_entropy(fake_output_real_text_noise_1, s_f))
