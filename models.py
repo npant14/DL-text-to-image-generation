@@ -14,7 +14,6 @@ class Generator(tf.keras.Model):
         self.text_embedding = Sequential([
             Dense(128, activation=None), 
             LeakyReLU(alpha=0.05)])
-        ## explore leaky relu activations
 
         self.deconv = Sequential([
             Dense(8*8*256),
@@ -41,11 +40,10 @@ class Generator(tf.keras.Model):
         return fimg
 
     def loss(self, s_f):
-        ## TODO: Verify that this matches what the paper is looking for 
-        #return tf.math.log(s_f)
-        binary_cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
-        #return tf.reduce_mean(binary_cross_entropy(tf.ones_like(s_f), s_f))
-        
+        """
+        param s_f: score of discriminator model on fake images with real captions
+        """
+        binary_cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)        
         return binary_cross_entropy(tf.ones_like(s_f), s_f)
 
 
@@ -80,7 +78,7 @@ class Discriminator(tf.keras.Model):
 
     def call(self, img, text):
         """
-        param latent_rep: latent space representation to be turned into image
+        param img       : image to be predicted if it is real or generated
         param text      : text embedding to concat with image
 
         returns: probability that the image is from the training set
@@ -95,10 +93,11 @@ class Discriminator(tf.keras.Model):
         return x
 
     def smooth_positive_labels(self, y):
-	    return y - 0.3 + (np.random.random(y.shape) * 0.5)
+        return y - 0.3 + (np.random.random(y.shape) * 0.5)
  
     def smooth_negative_labels(self, y):
-	    return y + np.random.random(y.shape) * 0.3
+        return y + np.random.random(y.shape) * 0.3
+
     def noisy_labels(self, y, p_flip):
         n_select = int(p_flip * int(y.shape[0]))
         flip_ix = np.random.choice([i for i in range(int(y.shape[0]))], size=n_select)
@@ -114,19 +113,17 @@ class Discriminator(tf.keras.Model):
         return outputs
 
     def loss(self, s_r, s_w, s_f):
-        ## TODO: Finish filling out
-        #return tf.math.log(s_r) + (tf.math.log(1 - s_w) + tf.math.log(1 - s_f))/2
         alpha = 0.5
         binary_cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=True)
+
+        ## implement noising + smoothing techniques from paper
         real_output_noise =  self.smooth_positive_labels(self.noisy_labels(tf.ones_like(s_r), 0.10))
         fake_output_real_text_noise_1 = self.smooth_negative_labels(tf.zeros_like(s_f))
         real_output_fake_text_noise = self.smooth_negative_labels(tf.zeros_like(s_w))
 
-        #real_loss = tf.reduce_mean(binary_cross_entropy(real_output_noise, s_r))
-        #fake_loss_ms_1 = tf.reduce_mean(binary_cross_entropy(fake_output_real_text_noise_1, s_f))
-        #fake_loss_2 = tf.reduce_mean(binary_cross_entropy(real_output_fake_text_noise, s_w))
         real_loss = binary_cross_entropy(real_output_noise, s_r)
         fake_loss_ms_1 = binary_cross_entropy(fake_output_real_text_noise_1, s_f)
         fake_loss_2 = binary_cross_entropy(real_output_fake_text_noise, s_w)
         total_loss = real_loss + alpha * fake_loss_2 + (1-alpha) * fake_loss_ms_1 
+
         return total_loss
